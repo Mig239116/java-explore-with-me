@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 public class ParticipationRequestMapper {
     public static ParticipationRequestDto toDto(ParticipationRequest request) {
         return new ParticipationRequestDto(
-                request.getCreated().truncatedTo(ChronoUnit.MICROS).plusNanos(1000L),
+                request.getCreated().truncatedTo(ChronoUnit.MILLIS),
                 request.getEvent().getId(),
                 request.getId(),
                 request.getRequester().getId(),
