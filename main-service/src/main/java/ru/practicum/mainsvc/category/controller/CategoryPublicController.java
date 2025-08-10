@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainsvc.category.dto.CategoryDto;
 import ru.practicum.mainsvc.category.service.CategoryService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,12 +27,12 @@ public class CategoryPublicController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<CategoryDto> getCategories(
+    public List<CategoryDto> getCategories(
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.debug("GET/categories - getting all categories");
-        return categoryService.getCategories(from, size);
+        return new ArrayList<>(categoryService.getCategories(from, size));
     }
 
     @GetMapping("/{categoryId}")
