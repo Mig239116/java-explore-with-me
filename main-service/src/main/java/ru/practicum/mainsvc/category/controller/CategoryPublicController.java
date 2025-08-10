@@ -37,9 +37,9 @@ public class CategoryPublicController {
         List<CategoryDto> categories = new ArrayList<>(categoryService.getCategories(from, size));
         String path = request.getRequestURI();
         if (path.contains("from=")) {
-            return categories;
-        } else {
             return new CategoriesListDto(categories);
+        } else {
+            return categories;
         }
     }
 
