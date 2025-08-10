@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
+
     @Query("SELECT new ru.practicum.statsdto.dto.ViewStatsDto(h.app, h.uri, COUNT(h.ip)) " +
             "FROM EndpointHit h " +
             "WHERE h.timestamp BETWEEN ?1 AND ?2 " +

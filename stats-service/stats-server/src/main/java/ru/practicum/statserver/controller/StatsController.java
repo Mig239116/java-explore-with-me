@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.statsdto.dto.NewEndpointHitDto;
 import ru.practicum.statsdto.dto.ViewStatsDto;
 import ru.practicum.statsdto.dto.EndpointHitDto;
+import ru.practicum.statserver.exceptions.BadRequestException;
 import ru.practicum.statserver.service.StatsService;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,9 @@ public class StatsController {
             @RequestParam(required = false) List<String> uris,
             @RequestParam(defaultValue = "false") boolean unique
             ) {
+        if (start.isAfter(end)) {
+            throw new BadRequestException("The dates not correct");
+        }
         return statsService.getStats(start, end, uris, unique);
     }
 }
