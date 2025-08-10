@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainsvc.category.dto.CategoriesListDto;
 import ru.practicum.mainsvc.category.dto.CategoryDto;
 import ru.practicum.mainsvc.category.service.CategoryService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,12 +26,12 @@ public class CategoryPublicController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CategoryDto> getCategories(
+    public CategoriesListDto getCategories(
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.debug("GET/categories - getting all categories");
-        return new ArrayList<>(categoryService.getCategories(from, size));
+        return new CategoriesListDto(new ArrayList<>(categoryService.getCategories(from, size)));
     }
 
     @GetMapping("/{categoryId}")
