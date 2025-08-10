@@ -11,7 +11,6 @@ import ru.practicum.mainsvc.category.dto.CategoryDto;
 import ru.practicum.mainsvc.category.service.CategoryService;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
