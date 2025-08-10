@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class EventFullDto {
 
     @NotBlank
-    @Size(min=1, max=2000)
+    @Size(min = 1, max = 2000)
     private String annotation;
 
     @NotNull
@@ -27,7 +27,7 @@ public class EventFullDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
 
-    @Size(min=20, max=7000)
+    @Size(min = 20, max = 7000)
     private String description;
 
     @NotNull
@@ -56,7 +56,7 @@ public class EventFullDto {
     private EventState state;
 
     @NotBlank
-    @Size(min=3, max=120)
+    @Size(min = 3, max = 120)
     private String title;
 
     @PositiveOrZero

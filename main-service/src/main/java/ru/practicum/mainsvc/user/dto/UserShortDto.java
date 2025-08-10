@@ -9,5 +9,5 @@ public class UserShortDto {
 
     private Long id;
 
-    private String Name;
+    private String name;
 }

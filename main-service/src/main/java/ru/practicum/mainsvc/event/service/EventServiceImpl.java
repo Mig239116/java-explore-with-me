@@ -388,7 +388,7 @@ public class EventServiceImpl implements EventService {
     private EventFullDto countableParametersFullDto(Event event) {
         EventFullDto eventFullDto = EventMapper.toFullDto(event);
         eventFullDto.setConfirmedRequests(requestRepository.countConfirmedRequests(event.getId()));
-        List<ViewStatsDto> viewsDto= statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
+        List<ViewStatsDto> viewsDto = statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
         if (!viewsDto.isEmpty()) {
             eventFullDto.setViews(viewsDto.getFirst().getHits());
         }
@@ -398,7 +398,7 @@ public class EventServiceImpl implements EventService {
     private EventShortDto countableParametersShortDto(Event event) {
         EventShortDto eventShortDto = EventMapper.toShortDto(event);
         eventShortDto.setConfirmedRequests(requestRepository.countConfirmedRequests(event.getId()));
-        List<ViewStatsDto> viewsDto= statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
+        List<ViewStatsDto> viewsDto = statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
         if (!viewsDto.isEmpty()) {
             eventShortDto.setViews(viewsDto.getFirst().getHits());
         }
