@@ -1,5 +1,6 @@
 package ru.practicum.mainsvc.category.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import ru.practicum.mainsvc.category.dto.CategoryDto;
 import ru.practicum.mainsvc.category.service.CategoryService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,12 +28,19 @@ public class CategoryPublicController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CategoriesListDto getCategories(
+    public Object getCategories(
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(defaultValue = "10") @Positive int size
+            @RequestParam(defaultValue = "10") @Positive int size,
+            HttpServletRequest request
     ) {
         log.debug("GET/categories - getting all categories");
-        return new CategoriesListDto(new ArrayList<>(categoryService.getCategories(from, size)));
+        List<CategoryDto> categories = new ArrayList<>(categoryService.getCategories(from, size));
+        String path = request.getRequestURI();
+        if (path.contains("from=")) {
+            return categories;
+        } else {
+            return new CategoriesListDto(categories);
+        }
     }
 
     @GetMapping("/{categoryId}")
