@@ -32,7 +32,7 @@ public class NewEventDto {
     private LocalDateTime eventDate;
 
     @NotNull
-    private LocationDto locationDto;
+    private LocationDto location;
 
     private Boolean paid;
 

@@ -41,7 +41,7 @@ public class EventFullDto {
     private UserShortDto initiator;
 
     @NotNull
-    private LocationDto locationDto;
+    private LocationDto location;
 
     private Boolean paid;
 

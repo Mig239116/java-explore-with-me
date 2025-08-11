@@ -77,9 +77,8 @@ public class EventServiceImpl implements EventService {
         if (newEventDto.getRequestModeration() == null) {
             event.setRequestModeration(true);
         }
-
         Event savedEvent = eventRepository.save(event);
-        return countableParametersFullDto(event);
+        return countableParametersFullDto(savedEvent);
     }
 
     @Override
@@ -318,9 +317,9 @@ public class EventServiceImpl implements EventService {
         if (requestDto.getEventDate() != null) {
             event.setEventDate(requestDto.getEventDate());
         }
-        if (requestDto.getLocationDto() != null) {
-            event.setLat(requestDto.getLocationDto().getLat());
-            event.setLon(requestDto.getLocationDto().getLon());
+        if (requestDto.getLocation() != null) {
+            event.setLat(requestDto.getLocation().getLat());
+            event.setLon(requestDto.getLocation().getLon());
         }
         if (requestDto.getPaid() != null) {
             event.setPaid(requestDto.getPaid());
@@ -349,9 +348,9 @@ public class EventServiceImpl implements EventService {
         if (requestDto.getEventDate() != null) {
             event.setEventDate(requestDto.getEventDate());
         }
-        if (requestDto.getLocationDto() != null) {
-            event.setLat(requestDto.getLocationDto().getLat());
-            event.setLon(requestDto.getLocationDto().getLon());
+        if (requestDto.getLocation() != null) {
+            event.setLat(requestDto.getLocation().getLat());
+            event.setLon(requestDto.getLocation().getLon());
         }
         if (requestDto.getPaid() != null) {
             event.setPaid(requestDto.getPaid());
