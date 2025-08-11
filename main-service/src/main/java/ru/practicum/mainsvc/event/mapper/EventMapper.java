@@ -5,7 +5,7 @@ import ru.practicum.mainsvc.event.dto.EventFullDto;
 import ru.practicum.mainsvc.event.dto.EventShortDto;
 import ru.practicum.mainsvc.event.dto.NewEventDto;
 import ru.practicum.mainsvc.event.model.Event;
-import ru.practicum.mainsvc.location.model.Location;
+import ru.practicum.mainsvc.location.dto.LocationDto;
 import ru.practicum.mainsvc.user.mapper.UserMapper;
 
 public class EventMapper {
@@ -24,7 +24,7 @@ public class EventMapper {
     }
 
     public static EventFullDto toFullDto(Event event) {
-        Location location = new Location(event.getLat(), event.getLon());
+        LocationDto locationDto = new LocationDto(event.getLat(), event.getLon());
 
         return new EventFullDto(
                 event.getAnnotation(),
@@ -35,7 +35,7 @@ public class EventMapper {
                 event.getEventDate(),
                 event.getId(),
                 UserMapper.toShortDto(event.getInitiator()),
-                location,
+                locationDto,
                 event.getPaid(),
                 event.getParticipantLimit(),
                 event.getPublishedOn(),
@@ -51,8 +51,8 @@ public class EventMapper {
         event.setAnnotation(newEventDto.getAnnotation());
         event.setDescription(newEventDto.getDescription());
         event.setEventDate(newEventDto.getEventDate());
-        event.setLat(newEventDto.getLocation().getLat());
-        event.setLon(newEventDto.getLocation().getLon());
+        event.setLat(newEventDto.getLocationDto().getLat());
+        event.setLon(newEventDto.getLocationDto().getLon());
         event.setPaid(newEventDto.getPaid() != null && newEventDto.getPaid());
         event.setParticipantLimit(newEventDto.getParticipantLimit() != null ?
                 newEventDto.getParticipantLimit() : 0);
@@ -63,7 +63,7 @@ public class EventMapper {
     }
 
     public static EventFullDto toFullDtoWithStats(Event event, Long confirmedRequests, Long views) {
-        Location location = new Location(event.getLat(), event.getLon());
+        LocationDto locationDto = new LocationDto(event.getLat(), event.getLon());
 
         return new EventFullDto(
                 event.getAnnotation(),
@@ -74,7 +74,7 @@ public class EventMapper {
                 event.getEventDate(),
                 event.getId(),
                 UserMapper.toShortDto(event.getInitiator()),
-                location,
+                locationDto,
                 event.getPaid(),
                 event.getParticipantLimit(),
                 event.getPublishedOn(),

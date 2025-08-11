@@ -1,4 +1,4 @@
-package ru.practicum.mainsvc.location.model;
+package ru.practicum.mainsvc.location.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Location {
+public class LocationDto {
 
     @NotNull
     private Float lat;

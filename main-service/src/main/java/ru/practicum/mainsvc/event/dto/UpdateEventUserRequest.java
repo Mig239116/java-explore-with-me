@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.mainsvc.event.model.StateAction;
-import ru.practicum.mainsvc.location.model.Location;
+import ru.practicum.mainsvc.location.dto.LocationDto;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +29,7 @@ public class UpdateEventUserRequest {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
-    private Location location;
+    private LocationDto locationDto;
 
     private Boolean paid;
 

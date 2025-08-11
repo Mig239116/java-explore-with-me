@@ -163,15 +163,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEvent(Long userId, Long eventId) {
         getUserOrThrow(userId);
-        Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = getEventByIdAndInitiator(eventId, userId);
         return countableParametersFullDto(event);
     }
 
     @Override
     public EventFullDto getEvent(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = getEventOrThrow(eventId);
 
         if (event.getState() != EventState.PUBLISHED) {
             throw new NotFoundException("Event not published");
@@ -211,8 +209,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto updateEvent(UpdateEventAdminRequest requestDto, Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = getEventOrThrow(eventId);
 
         if (requestDto.getStateAction() != null) {
             switch (requestDto.getStateAction()) {
@@ -321,9 +318,9 @@ public class EventServiceImpl implements EventService {
         if (requestDto.getEventDate() != null) {
             event.setEventDate(requestDto.getEventDate());
         }
-        if (requestDto.getLocation() != null) {
-            event.setLat(requestDto.getLocation().getLat());
-            event.setLon(requestDto.getLocation().getLon());
+        if (requestDto.getLocationDto() != null) {
+            event.setLat(requestDto.getLocationDto().getLat());
+            event.setLon(requestDto.getLocationDto().getLon());
         }
         if (requestDto.getPaid() != null) {
             event.setPaid(requestDto.getPaid());
@@ -352,9 +349,9 @@ public class EventServiceImpl implements EventService {
         if (requestDto.getEventDate() != null) {
             event.setEventDate(requestDto.getEventDate());
         }
-        if (requestDto.getLocation() != null) {
-            event.setLat(requestDto.getLocation().getLat());
-            event.setLon(requestDto.getLocation().getLon());
+        if (requestDto.getLocationDto() != null) {
+            event.setLat(requestDto.getLocationDto().getLat());
+            event.setLon(requestDto.getLocationDto().getLon());
         }
         if (requestDto.getPaid() != null) {
             event.setPaid(requestDto.getPaid());
@@ -372,17 +369,22 @@ public class EventServiceImpl implements EventService {
 
     private User getUserOrThrow(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
     }
 
     private Category getCategoryOrThrow(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category " + categoryId + " not found"));
     }
 
     private Event getEventOrThrow(Long eventId) {
         return eventRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event " + eventId + " not found"));
+    }
+
+    private Event getEventByIdAndInitiator(Long eventId, Long userId) {
+        return eventRepository.findByIdAndInitiatorId(eventId, userId)
+                .orElseThrow(() -> new NotFoundException("Event " + eventId + " not found"));
     }
 
     private EventFullDto countableParametersFullDto(Event event) {
