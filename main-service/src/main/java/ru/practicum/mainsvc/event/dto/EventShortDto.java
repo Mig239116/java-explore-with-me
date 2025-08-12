@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.mainsvc.category.dto.CategoryDto;
+import ru.practicum.mainsvc.comments.dto.CommentShortDto;
 import ru.practicum.mainsvc.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,4 +32,6 @@ public class EventShortDto {
     private String title;
 
     private Long views;
+
+    private List<CommentShortDto> comments;
 }

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainsvc.comments.dto.CommentDto;
+import ru.practicum.mainsvc.comments.dto.NewCommentDto;
+import ru.practicum.mainsvc.comments.service.CommentService;
 import ru.practicum.mainsvc.event.dto.EventFullDto;
 import ru.practicum.mainsvc.event.dto.EventShortDto;
 import ru.practicum.mainsvc.event.dto.NewEventDto;
@@ -24,17 +27,22 @@ import java.util.Collection;
 @Validated
 public class EventPrivateController {
     private final EventService eventService;
+    private final CommentService commentService;
 
     @Autowired
-    public EventPrivateController(@Qualifier("eventServiceImpl") EventService eventService) {
+    public EventPrivateController(
+            @Qualifier("eventServiceImpl") EventService eventService,
+            @Qualifier("commentServiceImpl") CommentService commentService
+    ) {
         this.eventService = eventService;
+        this.commentService = commentService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto addEvent(@RequestBody @Valid NewEventDto eventDto, @PathVariable long userId) {
         log.debug("POST users/id/event - posting new event");
-        //EventValidator.validateNewEvent(eventDto);
+
         if (eventDto.getRequestModeration() == null) {
             eventDto.setRequestModeration(true);
         }

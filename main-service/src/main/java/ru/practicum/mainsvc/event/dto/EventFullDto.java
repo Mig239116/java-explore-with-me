@@ -5,11 +5,13 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.practicum.mainsvc.category.dto.CategoryDto;
+import ru.practicum.mainsvc.comments.dto.CommentShortDto;
 import ru.practicum.mainsvc.event.model.EventState;
 import ru.practicum.mainsvc.location.dto.LocationDto;
 import ru.practicum.mainsvc.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -61,5 +63,7 @@ public class EventFullDto {
 
     @PositiveOrZero
     private Long views;
+
+    private List<CommentShortDto> comments;
 
 }

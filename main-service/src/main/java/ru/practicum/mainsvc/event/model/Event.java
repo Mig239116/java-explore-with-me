@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.mainsvc.category.model.Category;
+import ru.practicum.mainsvc.comments.model.Comment;
 import ru.practicum.mainsvc.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "events")

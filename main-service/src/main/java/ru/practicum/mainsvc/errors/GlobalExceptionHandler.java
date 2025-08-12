@@ -76,6 +76,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NoAuthorizationException.class)
+    public ResponseEntity<ApiError> handleNotFound(NoAuthorizationException ex) {
+        ApiError apiError = new ApiError(
+                HttpStatus.UNAUTHORIZED,
+                "The user is not an author",
+                ex.getMessage());
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ApiError> handleConflict(ConflictException ex) {
         ApiError apiError = new ApiError(
