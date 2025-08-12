@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.mainsvc.comments.dto.CommentDto;
-import ru.practicum.mainsvc.comments.dto.NewCommentDto;
 import ru.practicum.mainsvc.comments.service.CommentService;
 import ru.practicum.mainsvc.event.dto.EventFullDto;
 import ru.practicum.mainsvc.event.dto.EventShortDto;
