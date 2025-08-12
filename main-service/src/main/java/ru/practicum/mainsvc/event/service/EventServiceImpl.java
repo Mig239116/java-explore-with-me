@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsvc.category.model.Category;
 import ru.practicum.mainsvc.category.repository.CategoryRepository;
 import ru.practicum.mainsvc.comments.mapper.CommentMapper;
-import ru.practicum.mainsvc.comments.model.Comment;
 import ru.practicum.mainsvc.comments.model.CommentState;
 import ru.practicum.mainsvc.comments.repository.CommentRepository;
 import ru.practicum.mainsvc.common.stat.StatClientService;

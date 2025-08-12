@@ -1,6 +1,5 @@
 package ru.practicum.mainsvc.comments.service;
 
-import org.springframework.cglib.core.Local;
 import ru.practicum.mainsvc.comments.dto.CommentDto;
 import ru.practicum.mainsvc.comments.dto.CommentUpdateAdminRequest;
 import ru.practicum.mainsvc.comments.dto.NewCommentDto;

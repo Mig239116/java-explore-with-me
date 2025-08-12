@@ -6,7 +6,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import ru.practicum.mainsvc.comments.dto.CommentUpdateAdminRequest;
 import ru.practicum.mainsvc.comments.model.CommentState;
 import ru.practicum.mainsvc.comments.service.CommentService;
 import ru.practicum.mainsvc.errors.BadRequestException;
-import ru.practicum.mainsvc.event.model.EventState;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

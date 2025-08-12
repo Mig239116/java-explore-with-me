@@ -3,7 +3,6 @@ package ru.practicum.mainsvc.comments.mapper;
 import ru.practicum.mainsvc.comments.dto.CommentDto;
 import ru.practicum.mainsvc.comments.dto.CommentShortDto;
 import ru.practicum.mainsvc.comments.dto.NewCommentDto;
-import ru.practicum.mainsvc.comments.dto.UpdateCommentDto;
 import ru.practicum.mainsvc.comments.model.Comment;
 import ru.practicum.mainsvc.comments.model.CommentState;
 import ru.practicum.mainsvc.event.model.Event;

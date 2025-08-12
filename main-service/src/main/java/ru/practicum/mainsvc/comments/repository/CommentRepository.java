@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.mainsvc.comments.model.Comment;
 import ru.practicum.mainsvc.comments.model.CommentState;
-import ru.practicum.mainsvc.event.model.Event;
 
 import java.time.LocalDateTime;
 import java.util.List;

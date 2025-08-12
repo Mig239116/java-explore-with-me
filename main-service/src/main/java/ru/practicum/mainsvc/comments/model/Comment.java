@@ -44,7 +44,7 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime changed;
 
-    @Column(length=1000)
+    @Column(length = 1000)
     private String rejectionReason;
 
 }
