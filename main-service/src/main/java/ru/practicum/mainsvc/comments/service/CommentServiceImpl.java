@@ -133,7 +133,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void validateAuthor(Long userId, Long authorId) {
-        if (userId != authorId) {
+        if (!userId.equals(authorId)) {
             throw new NoAuthorizationException("The user is not an author");
         }
     }
