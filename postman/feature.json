@@ -1,0 +1,1144 @@
+{
+	"info": {
+		"_postman_id": "7bd0042e-9679-49b5-998e-2970a06645ff",
+		"name": "Comments",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35122261",
+		"_collection_link": "https://asda55-2425.postman.co/workspace/Diploma-part-3~41b35b1c-c3d0-47e7-804e-0a1f91726550/collection/35122261-7bd0042e-9679-49b5-998e-2970a06645ff?action=share&source=collection_link&creator=35122261"
+	},
+	"item": [
+		{
+			"name": "Create comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has correct structure\", function() {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response).to.have.property('id');\r",
+							"    pm.expect(response).to.have.property('text', 'This is a test comment');\r",
+							"    pm.expect(response).to.have.property('state', 'PENDING');\r",
+							"    pm.expect(response.eventId).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
+							"     pm.expect(response.author.id.toString()).to.eq(pm.collectionVariables.get(\"user_id\").toString());\r",
+							"\r",
+							"pm.collectionVariables.set(\"comment_id\", response.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const createUser = {\r",
+							"    url: pm.collectionVariables.get(\"base_url\") + \"/admin/users\",\r",
+							"    method: 'POST',\r",
+							"    header: 'Content-Type: application/json',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"name\": \"Test User\",\r",
+							"            \"email\": \"testuser_\" + Math.floor(Math.random() * 10000) + \"@example.com\"\r",
+							"        })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(createUser, (err, res) => {\r",
+							"    if (err) {\r",
+							"        console.error(\"Error creating user:\", err);\r",
+							"        return;\r",
+							"    }\r",
+							"    \r",
+							"    pm.collectionVariables.set(\"user_id\", res.json().id);\r",
+							"    console.log(\"Created user with ID:\", pm.collectionVariables.get(\"user_id\"));\r",
+							"\r",
+							"    const createCategory = {\r",
+							"        url: pm.collectionVariables.get(\"base_url\") + \"/admin/categories\",\r",
+							"        method: 'POST',\r",
+							"        header: 'Content-Type: application/json',\r",
+							"        body: {\r",
+							"            mode: 'raw',\r",
+							"            raw: JSON.stringify({\r",
+							"                \"name\": \"Test Category \" + Math.floor(Math.random() * 1000)\r",
+							"            })\r",
+							"        }\r",
+							"    };\r",
+							"\r",
+							"    pm.sendRequest(createCategory, (err, res) => {\r",
+							"        if (err) {\r",
+							"            console.error(\"Error creating category:\", err);\r",
+							"            return;\r",
+							"        }\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"category_id\", res.json().id);\r",
+							"        console.log(\"Created category with ID:\", pm.collectionVariables.get(\"category_id\"));\r",
+							"\r",
+							"        const createEvent = {\r",
+							"            url: pm.collectionVariables.get(\"base_url\") + \"/users/\" + pm.collectionVariables.get(\"user_id\") + \"/events\",\r",
+							"            method: 'POST',\r",
+							"            header: 'Content-Type: application/json',\r",
+							"            body: {\r",
+							"                mode: 'raw',\r",
+							"                raw: JSON.stringify({\r",
+							"                    \"annotation\": \"Test event annotation\",\r",
+							"                    \"category\": pm.collectionVariables.get(\"category_id\"),\r",
+							"                    \"description\": \"Detailed description of test event\",\r",
+							"                    \"eventDate\": \"2025-12-31 15:10:05\",\r",
+							"                    \"location\": {\r",
+							"                        \"lat\": 55.754167,\r",
+							"                        \"lon\": 37.62\r",
+							"                    },\r",
+							"                    \"paid\": true,\r",
+							"                    \"title\": \"Test Event\",\r",
+							"                    \"participantLimit\": 10\r",
+							"                })\r",
+							"            }\r",
+							"        };\r",
+							"\r",
+							"        pm.sendRequest(createEvent, (err, res) => {\r",
+							"            if (err) {\r",
+							"                console.error(\"Error creating event:\", err);\r",
+							"                return;\r",
+							"            }\r",
+							"            \r",
+							"            pm.collectionVariables.set(\"event_id\", res.json().id);\r",
+							"            console.log(\"Created event with ID:\", pm.collectionVariables.get(\"event_id\"));\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"This is a test comment\",\r\n  \"eventId\": {{event_id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Comment data is correct\", function() {\r",
+							"    const comment = pm.response.json();\r",
+							"    \r",
+							"\r",
+							"    pm.expect(comment.id.toString()).to.eq(pm.collectionVariables.get(\"comment_id\").toString());\r",
+							"    \r",
+							"\r",
+							"    pm.expect(comment.author.id.toString()).to.eq(pm.collectionVariables.get(\"user_id\").toString());\r",
+							"    \r",
+							"\r",
+							"    console.log(\"Comment author ID:\", comment.author.id, \"Type:\", typeof comment.author.id);\r",
+							"    console.log(\"Stored user ID:\", pm.collectionVariables.get(\"user_id\"), \"Type:\", typeof pm.collectionVariables.get(\"user_id\"));\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get non existing comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments/20000",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments",
+						"20000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get comments for moderation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returns filtered comments\", function() {\r",
+							"    const comments = pm.response.json();\r",
+							"    pm.expect(comments).to.be.an('array');\r",
+							"    comments.forEach(comment => {\r",
+							"        pm.expect(comment.state).to.eq(\"PENDING\");\r",
+							"        pm.expect(Number(comment.eventId)).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/admin/comments?users={{user_id}}&states=PENDING&events={{event_id}}&from=0&size=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "users",
+							"value": "{{user_id}}"
+						},
+						{
+							"key": "states",
+							"value": "PENDING"
+						},
+						{
+							"key": "events",
+							"value": "{{event_id}}"
+						},
+						{
+							"key": "from",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains array of comments\", function() {\r",
+							"    const comments = pm.response.json();\r",
+							"    pm.expect(comments).to.be.an('array');\r",
+							"    pm.expect(Number(comments[0].author.id)).to.eq(Number(pm.collectionVariables.get(\"user_id\")));\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments?states=PENDING&from=0&size=10",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "states",
+							"value": "PENDING"
+						},
+						{
+							"key": "from",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Event is published\", function() {\r",
+							"    const event = pm.response.json();\r",
+							"    pm.expect(event.state).to.eq(\"PUBLISHED\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"stateAction\": \"PUBLISH_EVENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/events/{{event_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approving comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Comment is published\", function() {\r",
+							"    const comment = pm.response.json();\r",
+							"    pm.expect(comment.state).to.eq(\"PUBLISHED\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"action\": \"PUBLISH_COMMENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approving published comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function() {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"action\": \"PUBLISH_COMMENT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rejecting published comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 409\", function() {\r",
+							"    pm.response.to.have.status(409);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"action\": \"REJECT_COMMENT\",\r\n  \"rejectionReason\": \"Нарушение правил\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get events with commentaries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Event contains published comments\", function() {\r",
+							"    const event = pm.response.json();\r",
+							"    pm.expect(event.comments).to.be.an('array');\r",
+							"    \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/events/{{event_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"events",
+						"{{event_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Comment text is updated\", function() {\r",
+							"    const comment = pm.response.json();\r",
+							"    pm.expect(comment.text).to.eq(\"Обновленный комментарий\");\r",
+							"    pm.expect(comment.state).to.eq(\"PENDING\"); // Состояние должно сброситься\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"Обновленный комментарий\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rejecting comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Comment is published\", function() {\r",
+							"    const comment = pm.response.json();\r",
+							"    pm.expect(comment.state).to.eq(\"REJECTED\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"action\": \"REJECT_COMMENT\",\r\n  \"rejectionReason\": \"Нарушение правил\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/admin/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"admin",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 No Content\", function() {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"// Проверка что комментарий действительно удален\r",
+							"pm.test(\"Comment is actually deleted\", function() {\r",
+							"    pm.sendRequest({\r",
+							"        url: pm.collectionVariables.get(\"base_url\") + \r",
+							"             \"/users/\" + pm.collectionVariables.get(\"user_id\") + \r",
+							"             \"/comments/\" + pm.collectionVariables.get(\"comment_id\"),\r",
+							"        method: 'GET',\r",
+							"        header: {\r",
+							"            'Content-Type': 'application/json'\r",
+							"        }\r",
+							"    }, function (err, res) {\r",
+							"        pm.expect(res.code).to.eq(404);\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments/{{comment_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create comment with blank body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function() {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const createUser = {\r",
+							"    url: pm.collectionVariables.get(\"base_url\") + \"/admin/users\",\r",
+							"    method: 'POST',\r",
+							"    header: 'Content-Type: application/json',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"name\": \"Test User\",\r",
+							"            \"email\": \"testuser_\" + Math.floor(Math.random() * 10000) + \"@example.com\"\r",
+							"        })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(createUser, (err, res) => {\r",
+							"    if (err) {\r",
+							"        console.error(\"Error creating user:\", err);\r",
+							"        return;\r",
+							"    }\r",
+							"    \r",
+							"    pm.collectionVariables.set(\"user_id\", res.json().id);\r",
+							"    console.log(\"Created user with ID:\", pm.collectionVariables.get(\"user_id\"));\r",
+							"\r",
+							"    const createCategory = {\r",
+							"        url: pm.collectionVariables.get(\"base_url\") + \"/admin/categories\",\r",
+							"        method: 'POST',\r",
+							"        header: 'Content-Type: application/json',\r",
+							"        body: {\r",
+							"            mode: 'raw',\r",
+							"            raw: JSON.stringify({\r",
+							"                \"name\": \"Test Category \" + Math.floor(Math.random() * 1000)\r",
+							"            })\r",
+							"        }\r",
+							"    };\r",
+							"\r",
+							"    pm.sendRequest(createCategory, (err, res) => {\r",
+							"        if (err) {\r",
+							"            console.error(\"Error creating category:\", err);\r",
+							"            return;\r",
+							"        }\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"category_id\", res.json().id);\r",
+							"        console.log(\"Created category with ID:\", pm.collectionVariables.get(\"category_id\"));\r",
+							"\r",
+							"        const createEvent = {\r",
+							"            url: pm.collectionVariables.get(\"base_url\") + \"/users/\" + pm.collectionVariables.get(\"user_id\") + \"/events\",\r",
+							"            method: 'POST',\r",
+							"            header: 'Content-Type: application/json',\r",
+							"            body: {\r",
+							"                mode: 'raw',\r",
+							"                raw: JSON.stringify({\r",
+							"                    \"annotation\": \"Test event annotation\",\r",
+							"                    \"category\": pm.collectionVariables.get(\"category_id\"),\r",
+							"                    \"description\": \"Detailed description of test event\",\r",
+							"                    \"eventDate\": \"2025-12-31 15:10:05\",\r",
+							"                    \"location\": {\r",
+							"                        \"lat\": 55.754167,\r",
+							"                        \"lon\": 37.62\r",
+							"                    },\r",
+							"                    \"paid\": true,\r",
+							"                    \"title\": \"Test Event\",\r",
+							"                    \"participantLimit\": 10\r",
+							"                })\r",
+							"            }\r",
+							"        };\r",
+							"\r",
+							"        pm.sendRequest(createEvent, (err, res) => {\r",
+							"            if (err) {\r",
+							"                console.error(\"Error creating event:\", err);\r",
+							"                return;\r",
+							"            }\r",
+							"            \r",
+							"            pm.collectionVariables.set(\"event_id\", res.json().id);\r",
+							"            console.log(\"Created event with ID:\", pm.collectionVariables.get(\"event_id\"));\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \" \",\r\n  \"eventId\": {{event_id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create comment with negative ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function() {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const createUser = {\r",
+							"    url: pm.collectionVariables.get(\"base_url\") + \"/admin/users\",\r",
+							"    method: 'POST',\r",
+							"    header: 'Content-Type: application/json',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"name\": \"Test User\",\r",
+							"            \"email\": \"testuser_\" + Math.floor(Math.random() * 10000) + \"@example.com\"\r",
+							"        })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(createUser, (err, res) => {\r",
+							"    if (err) {\r",
+							"        console.error(\"Error creating user:\", err);\r",
+							"        return;\r",
+							"    }\r",
+							"    \r",
+							"    pm.collectionVariables.set(\"user_id\", res.json().id);\r",
+							"    console.log(\"Created user with ID:\", pm.collectionVariables.get(\"user_id\"));\r",
+							"\r",
+							"    const createCategory = {\r",
+							"        url: pm.collectionVariables.get(\"base_url\") + \"/admin/categories\",\r",
+							"        method: 'POST',\r",
+							"        header: 'Content-Type: application/json',\r",
+							"        body: {\r",
+							"            mode: 'raw',\r",
+							"            raw: JSON.stringify({\r",
+							"                \"name\": \"Test Category \" + Math.floor(Math.random() * 1000)\r",
+							"            })\r",
+							"        }\r",
+							"    };\r",
+							"\r",
+							"    pm.sendRequest(createCategory, (err, res) => {\r",
+							"        if (err) {\r",
+							"            console.error(\"Error creating category:\", err);\r",
+							"            return;\r",
+							"        }\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"category_id\", res.json().id);\r",
+							"        console.log(\"Created category with ID:\", pm.collectionVariables.get(\"category_id\"));\r",
+							"\r",
+							"        const createEvent = {\r",
+							"            url: pm.collectionVariables.get(\"base_url\") + \"/users/\" + pm.collectionVariables.get(\"user_id\") + \"/events\",\r",
+							"            method: 'POST',\r",
+							"            header: 'Content-Type: application/json',\r",
+							"            body: {\r",
+							"                mode: 'raw',\r",
+							"                raw: JSON.stringify({\r",
+							"                    \"annotation\": \"Test event annotation\",\r",
+							"                    \"category\": pm.collectionVariables.get(\"category_id\"),\r",
+							"                    \"description\": \"Detailed description of test event\",\r",
+							"                    \"eventDate\": \"2025-12-31 15:10:05\",\r",
+							"                    \"location\": {\r",
+							"                        \"lat\": 55.754167,\r",
+							"                        \"lon\": 37.62\r",
+							"                    },\r",
+							"                    \"paid\": true,\r",
+							"                    \"title\": \"Test Event\",\r",
+							"                    \"participantLimit\": 10\r",
+							"                })\r",
+							"            }\r",
+							"        };\r",
+							"\r",
+							"        pm.sendRequest(createEvent, (err, res) => {\r",
+							"            if (err) {\r",
+							"                console.error(\"Error creating event:\", err);\r",
+							"                return;\r",
+							"            }\r",
+							"            \r",
+							"            pm.collectionVariables.set(\"event_id\", res.json().id);\r",
+							"            console.log(\"Created event with ID:\", pm.collectionVariables.get(\"event_id\"));\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"12\",\r\n  \"eventId\": \"-1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create comment for non-existing event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function() {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const createUser = {\r",
+							"    url: pm.collectionVariables.get(\"base_url\") + \"/admin/users\",\r",
+							"    method: 'POST',\r",
+							"    header: 'Content-Type: application/json',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"name\": \"Test User\",\r",
+							"            \"email\": \"testuser_\" + Math.floor(Math.random() * 10000) + \"@example.com\"\r",
+							"        })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"pm.sendRequest(createUser, (err, res) => {\r",
+							"    if (err) {\r",
+							"        console.error(\"Error creating user:\", err);\r",
+							"        return;\r",
+							"    }\r",
+							"    \r",
+							"    pm.collectionVariables.set(\"user_id\", res.json().id);\r",
+							"    console.log(\"Created user with ID:\", pm.collectionVariables.get(\"user_id\"));\r",
+							"\r",
+							"    const createCategory = {\r",
+							"        url: pm.collectionVariables.get(\"base_url\") + \"/admin/categories\",\r",
+							"        method: 'POST',\r",
+							"        header: 'Content-Type: application/json',\r",
+							"        body: {\r",
+							"            mode: 'raw',\r",
+							"            raw: JSON.stringify({\r",
+							"                \"name\": \"Test Category \" + Math.floor(Math.random() * 1000)\r",
+							"            })\r",
+							"        }\r",
+							"    };\r",
+							"\r",
+							"    pm.sendRequest(createCategory, (err, res) => {\r",
+							"        if (err) {\r",
+							"            console.error(\"Error creating category:\", err);\r",
+							"            return;\r",
+							"        }\r",
+							"        \r",
+							"        pm.collectionVariables.set(\"category_id\", res.json().id);\r",
+							"        console.log(\"Created category with ID:\", pm.collectionVariables.get(\"category_id\"));\r",
+							"\r",
+							"        const createEvent = {\r",
+							"            url: pm.collectionVariables.get(\"base_url\") + \"/users/\" + pm.collectionVariables.get(\"user_id\") + \"/events\",\r",
+							"            method: 'POST',\r",
+							"            header: 'Content-Type: application/json',\r",
+							"            body: {\r",
+							"                mode: 'raw',\r",
+							"                raw: JSON.stringify({\r",
+							"                    \"annotation\": \"Test event annotation\",\r",
+							"                    \"category\": pm.collectionVariables.get(\"category_id\"),\r",
+							"                    \"description\": \"Detailed description of test event\",\r",
+							"                    \"eventDate\": \"2025-12-31 15:10:05\",\r",
+							"                    \"location\": {\r",
+							"                        \"lat\": 55.754167,\r",
+							"                        \"lon\": 37.62\r",
+							"                    },\r",
+							"                    \"paid\": true,\r",
+							"                    \"title\": \"Test Event\",\r",
+							"                    \"participantLimit\": 10\r",
+							"                })\r",
+							"            }\r",
+							"        };\r",
+							"\r",
+							"        pm.sendRequest(createEvent, (err, res) => {\r",
+							"            if (err) {\r",
+							"                console.error(\"Error creating event:\", err);\r",
+							"                return;\r",
+							"            }\r",
+							"            \r",
+							"            pm.collectionVariables.set(\"event_id\", res.json().id);\r",
+							"            console.log(\"Created event with ID:\", pm.collectionVariables.get(\"event_id\"));\r",
+							"        });\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"text\": \"12\",\r\n  \"eventId\": \"20000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/users/{{user_id}}/comments",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "category_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "comment_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "event_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

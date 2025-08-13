@@ -8,6 +8,8 @@ import ru.practicum.mainsvc.event.model.Event;
 import ru.practicum.mainsvc.location.dto.LocationDto;
 import ru.practicum.mainsvc.user.mapper.UserMapper;
 
+import java.util.ArrayList;
+
 public class EventMapper {
     public static EventShortDto toShortDto(Event event) {
         return new EventShortDto(
@@ -19,7 +21,8 @@ public class EventMapper {
                 UserMapper.toShortDto(event.getInitiator()),
                 event.getPaid(),
                 event.getTitle(),
-                0L
+                0L,
+                new ArrayList<>()
         );
     }
 
@@ -42,7 +45,8 @@ public class EventMapper {
                 event.getRequestModeration(),
                 event.getState(),
                 event.getTitle(),
-                0L
+                0L,
+                new ArrayList<>()
         );
     }
 
@@ -81,7 +85,8 @@ public class EventMapper {
                 event.getRequestModeration(),
                 event.getState(),
                 event.getTitle(),
-                views != null ? views : 0
+                views != null ? views : 0,
+                new ArrayList<>()
         );
     }
 }

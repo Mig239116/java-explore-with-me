@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainsvc.category.model.Category;
 import ru.practicum.mainsvc.category.repository.CategoryRepository;
+import ru.practicum.mainsvc.comments.mapper.CommentMapper;
+import ru.practicum.mainsvc.comments.model.CommentState;
+import ru.practicum.mainsvc.comments.repository.CommentRepository;
 import ru.practicum.mainsvc.common.stat.StatClientService;
 import ru.practicum.mainsvc.errors.ConflictException;
 import ru.practicum.mainsvc.errors.ForbiddenException;
@@ -52,6 +55,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ParticipationRequestRepository requestRepository;
     private final StatClientService statClientService;
+    private final CommentRepository commentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -389,6 +393,10 @@ public class EventServiceImpl implements EventService {
     private EventFullDto countableParametersFullDto(Event event) {
         EventFullDto eventFullDto = EventMapper.toFullDto(event);
         eventFullDto.setConfirmedRequests(requestRepository.countConfirmedRequests(event.getId()));
+        eventFullDto.setComments(commentRepository.findByEventIdAndState(event.getId(), CommentState.PUBLISHED).stream()
+                .map(CommentMapper::toShortDto)
+                .collect(Collectors.toList())
+        );
         List<ViewStatsDto> viewsDto = statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
         if (!viewsDto.isEmpty()) {
             eventFullDto.setViews(viewsDto.getFirst().getHits());
@@ -399,6 +407,10 @@ public class EventServiceImpl implements EventService {
     private EventShortDto countableParametersShortDto(Event event) {
         EventShortDto eventShortDto = EventMapper.toShortDto(event);
         eventShortDto.setConfirmedRequests(requestRepository.countConfirmedRequests(event.getId()));
+        eventShortDto.setComments(commentRepository.findByEventIdAndState(event.getId(), CommentState.PUBLISHED).stream()
+                .map(CommentMapper::toShortDto)
+                .collect(Collectors.toList())
+        );
         List<ViewStatsDto> viewsDto = statClientService.getEventStats(List.of(event.getId()),event.getCreatedOn(), LocalDateTime.now()).stream().toList();
         if (!viewsDto.isEmpty()) {
             eventShortDto.setViews(viewsDto.getFirst().getHits());
