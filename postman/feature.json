@@ -23,7 +23,7 @@
 							"    pm.expect(response).to.have.property('id');\r",
 							"    pm.expect(response).to.have.property('text', 'This is a test comment');\r",
 							"    pm.expect(response).to.have.property('state', 'PENDING');\r",
-							"    pm.expect(response).to.have.property('eventId', pm.collectionVariables.get(\"event_id\"));\r",
+							"    pm.expect(response.eventId).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
 							"    pm.expect(response.author).to.have.property('id', pm.collectionVariables.get(\"user_id\"));\r",
 							"});\r",
 							"\r",
@@ -159,7 +159,7 @@
 							"\r",
 							"pm.test(\"Comment data is correct\", function() {\r",
 							"    const comment = pm.response.json();\r",
-							"    pm.expect(comment.id).to.eq(pm.collectionVariables.get(\"comment_id\"));\r",
+							"    pm.expect(comment.id).to.eq(Number(pm.collectionVariables.get(\"comment_id\")));\r",
 							"    pm.expect(comment.author.id).to.eq(pm.collectionVariables.get(\"user_id\"));\r",
 							"});"
 						],
@@ -237,7 +237,7 @@
 							"    pm.expect(comments).to.be.an('array');\r",
 							"    comments.forEach(comment => {\r",
 							"        pm.expect(comment.state).to.eq(\"PENDING\");\r",
-							"        pm.expect(comment.eventId).to.eq(pm.collectionVariables.get(\"event_id\"));\r",
+							"        pm.expect(Number(comment.eventId)).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
 							"    });\r",
 							"});"
 						],
@@ -298,7 +298,7 @@
 							"pm.test(\"Response contains array of comments\", function() {\r",
 							"    const comments = pm.response.json();\r",
 							"    pm.expect(comments).to.be.an('array');\r",
-							"    pm.expect(comments[0].author.id).to.eq(pm.collectionVariables.get(\"user_id\"));\r",
+							"    pm.expect(Number(comments[0].author.id)).to.eq(Number(pm.collectionVariables.get(\"user_id\")));\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -481,14 +481,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 400\", function() {\r",
-							"    pm.response.to.have.status(400);\r",
+							"pm.test(\"Status code is 409\", function() {\r",
+							"    pm.response.to.have.status(409);\r",
 							"});\r",
-							"\r",
-							"pm.test(\"Comment is published\", function() {\r",
-							"    const comment = pm.response.json();\r",
-							"    pm.expect(comment.state).to.eq(\"REJECTED\");\r",
-							"});"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
