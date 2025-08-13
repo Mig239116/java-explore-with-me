@@ -24,8 +24,7 @@
 							"    pm.expect(response).to.have.property('text', 'This is a test comment');\r",
 							"    pm.expect(response).to.have.property('state', 'PENDING');\r",
 							"    pm.expect(response.eventId).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
-							"    pm.expect(response.author).to.have.property('id', pm.collectionVariables.get(\"user_id\"));\r",
-							"});\r",
+							"     pm.expect(response.author.id.toString()).to.eq(pm.collectionVariables.get(\"user_id\").toString());\r",
 							"\r",
 							"const response = pm.response.json();\r",
 							"pm.collectionVariables.set(\"comment_id\", response.id);"
@@ -159,7 +158,7 @@
 							"\r",
 							"pm.test(\"Comment data is correct\", function() {\r",
 							"    const comment = pm.response.json();\r",
-							"    pm.expect(comment.id).to.eq(Number(pm.collectionVariables.get(\"comment_id\")));\r",
+							"    pm.expect(comment.id.toString()).to.eq(pm.collectionVariables.get(\"comment_id\").toString());\r",
 							"    pm.expect(comment.author.id).to.eq(pm.collectionVariables.get(\"user_id\"));\r",
 							"});"
 						],
