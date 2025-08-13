@@ -26,8 +26,8 @@
 							"    pm.expect(response.eventId).to.eq(Number(pm.collectionVariables.get(\"event_id\")));\r",
 							"     pm.expect(response.author.id.toString()).to.eq(pm.collectionVariables.get(\"user_id\").toString());\r",
 							"\r",
-							"const response = pm.response.json();\r",
-							"pm.collectionVariables.set(\"comment_id\", response.id);"
+							"pm.collectionVariables.set(\"comment_id\", response.id);\r",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
